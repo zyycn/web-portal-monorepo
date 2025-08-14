@@ -1,0 +1,51 @@
+{
+  "name": "web-portal-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "dev:web-vue": "pnpm -C apps/web-vue dev",
+    "preview": "turbo-run preview",
+    "postinstall": "pnpm -r run stub --if-present",
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "husky"
+  },
+  "packageManager": "pnpm@10.14.0",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "crypto-js": "^4.2.0",
+    "dayjs": "^1.11.13",
+    "es-toolkit": "^1.39.9",
+    "modern-normalize": "^3.0.1",
+    "nprogress": "^0.2.0",
+    "qs": "^6.14.0"
+  },
+  "devDependencies": {
+    "@internal/eslint-config": "workspace:^",
+    "@internal/lint-staged-config": "workspace:^",
+    "@internal/prettier-config": "workspace:^",
+    "@internal/stylelint-config": "workspace:^",
+    "@internal/tsconfig": "workspace:^",
+    "@internal/vite-config": "workspace:^",
+    "eslint": "^9.33.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
+    "prettier": "^3.6.2",
+    "sass": "^1.90.0",
+    "stylelint": "^16.23.1",
+    "tailwindcss": "^4.1.11",
+    "turbo": "^2.5.5",
+    "typescript": "^5.9.2",
+    "unbuild": "^3.6.0",
+    "vite": "^7.1.2"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "volta": {
+    "node": "22.18.0",
+    "pnpm": "10.14.0"
+  }
+}

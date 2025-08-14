@@ -1,0 +1,6 @@
+packages:
+  - apps/*
+  - internal/*
+  - packages/*
+
+linkWorkspacePackages: true

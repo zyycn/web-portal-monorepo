@@ -1,0 +1,30 @@
+{
+  "name": "@internal/eslint-config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "stub": "pnpm unbuild --stub"
+  },
+  "exports": {
+    "./ts": {
+      "import": "./dist/ts/index.mjs",
+      "types": "./dist/ts/index.d.ts"
+    },
+    "./vue": {
+      "import": "./dist/vue/index.mjs",
+      "types": "./dist/vue/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import-x": "^4.16.1",
+    "eslint-plugin-perfectionist": "^4.15.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-unicorn": "^60.0.0",
+    "eslint-plugin-vue": "^10.4.0",
+    "globals": "^16.3.0",
+    "typescript-eslint": "^8.39.1"
+  }
+}

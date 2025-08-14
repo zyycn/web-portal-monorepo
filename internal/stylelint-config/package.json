@@ -1,0 +1,17 @@
+{
+  "name": "@internal/stylelint-config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./index.mjs"
+    }
+  },
+  "dependencies": {
+    "stylelint-config-recess-order": "^7.2.0",
+    "stylelint-config-recommended-vue": "^1.6.1",
+    "stylelint-config-standard": "^39.0.0",
+    "stylelint-config-standard-scss": "^15.0.1"
+  }
+}
