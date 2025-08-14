@@ -153,6 +153,9 @@ importers:
       '@tsconfig/node22':
         specifier: ^22.0.2
         version: 22.0.2
+      '@types/node':
+        specifier: ^24.2.1
+        version: 24.2.1
 
   internal/vite-config:
     dependencies:
@@ -3928,7 +3931,6 @@ snapshots:
   '@types/node@24.2.1':
     dependencies:
       undici-types: 7.10.0
-    optional: true
 
   '@types/resolve@1.20.2': {}
 
@@ -6594,8 +6596,7 @@ snapshots:
       - vue-sfc-transformer
       - vue-tsc
 
-  undici-types@7.10.0:
-    optional: true
+  undici-types@7.10.0: {}
 
   universalify@2.0.1: {}
 

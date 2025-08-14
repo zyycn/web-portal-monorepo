@@ -5,6 +5,7 @@
   "type": "module",
   "main": "tsconfig.app.json",
   "dependencies": {
-    "@tsconfig/node22": "^22.0.2"
+    "@tsconfig/node22": "^22.0.2",
+    "@types/node": "^24.2.1"
   }
 }
