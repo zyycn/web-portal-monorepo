@@ -3,5 +3,6 @@ packages:
   - internal/*
   - internal/lint-configs/*
   - packages/*
+  - scripts/*
 
 linkWorkspacePackages: true

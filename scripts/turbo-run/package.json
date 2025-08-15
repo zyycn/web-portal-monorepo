@@ -1,0 +1,24 @@
+{
+  "name": "@scripts/turbo-run",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "stub": "pnpm unbuild --stub",
+    "test": "node ./dist/index.mjs"
+  },
+  "bin": {
+    "turbo-run": "./bin/turbo-run.mjs"
+  },
+  "exports": {
+    ".": {
+      "default": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "cac": "^6.7.14",
+    "consola": "^3.4.2"
+  }
+}
