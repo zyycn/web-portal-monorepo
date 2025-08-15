@@ -5,7 +5,7 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./index.mjs"
+      "default": "./index.mjs"
     }
   },
   "dependencies": {

@@ -7,15 +7,17 @@
     "stub": "pnpm unbuild --stub"
   },
   "exports": {
-    "./vue": {
-      "import": "./dist/vue/index.mjs",
-      "types": "./dist/vue/index.d.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
     }
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
     "@vitejs/plugin-vue": "^6.0.1",
-    "tailwindcss": "^4.1.11",
-    "vite-plugin-compression": "^0.5.1"
+    "@vitejs/plugin-vue-jsx": "^5.0.1",
+    "vite-plugin-checker": "^0.10.2",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-vue-devtools": "^8.0.0"
   }
 }

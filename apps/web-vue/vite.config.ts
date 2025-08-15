@@ -1,3 +1,3 @@
-import { defineConfig } from '@internal/vite-config/vue'
+import { defineConfig } from '@internal/vite-config'
 
 export default defineConfig()

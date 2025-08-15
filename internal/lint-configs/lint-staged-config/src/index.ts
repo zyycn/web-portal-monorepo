@@ -7,20 +7,20 @@
  *
  * 使用示例：
  * // 方式1: 使用所有默认规则
- * export default createLintStagedConfig();
+ * export default defineConfig();
  *
  * // 方式2: 只启用特定规则（按规则名称）
- * export default createLintStagedConfig({ enabledRules: ['vue'] });
+ * export default defineConfig({ enabledRules: ['vue'] });
  *
  * // 方式3: 覆盖部分配置（保留未覆盖的默认配置）
- * export default createLintStagedConfig({
+ * export default defineConfig({
  *   overrides: {
  *     '*.ts': ['eslint --fix']
  *   }
  * });
  *
  * // 方式4: 完全自定义配置（忽略所有默认规则）
- * export default createLintStagedConfig({
+ * export default defineConfig({
  *   customConfig: {
  *     '*.js': ['eslint --fix'],
  *     '*.css': ['stylelint --fix']
@@ -39,11 +39,11 @@ const RULE_SET = {
     pattern: '{!(package)*.json,*.code-snippets,.!(browserslist)*rc,*.md}'
   },
   styles: {
-    commands: ['prettier --cache --ignore-unknown --write', 'stylelint --fix --allow-empty-input'],
+    commands: ['prettier --cache --ignore-unknown --write', 'stylelint --fix'],
     pattern: '*.{scss,html,vue,css}'
   },
   vue: {
-    commands: ['prettier --cache --write', 'eslint --fix', 'stylelint --fix --allow-empty-input'],
+    commands: ['prettier --cache --write', 'eslint --fix', 'stylelint --fix'],
     pattern: '*.vue'
   }
 }
@@ -51,7 +51,7 @@ const RULE_SET = {
 // 默认启用所有规则
 const DEFAULT_ENABLED_RULES = Object.keys(RULE_SET) as (keyof typeof RULE_SET)[]
 
-interface CreateLintStagedConfigOptions {
+interface defineConfigOptions {
   customConfig?: import('lint-staged').Configuration
   enabledRules?: RuleName[]
   overrides?: Partial<Record<RuleName, string[]>>
@@ -63,7 +63,7 @@ type RuleName = keyof typeof RULE_SET
  * 创建可定制的 lint-staged 配置
  * @param options 配置选项
  */
-export function createLintStagedConfig(options: CreateLintStagedConfigOptions = {}): import('lint-staged').Configuration {
+export function defineConfig(options: defineConfigOptions = {}): import('lint-staged').Configuration {
   if (options.customConfig) {
     return options.customConfig
   }
@@ -81,4 +81,4 @@ export function createLintStagedConfig(options: CreateLintStagedConfigOptions = 
   return baseConfig
 }
 
-export default createLintStagedConfig()
+export default defineConfig()

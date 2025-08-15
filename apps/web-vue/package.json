@@ -12,7 +12,6 @@
     "vue": "^3.5.18"
   },
   "devDependencies": {
-    "@vue/tsconfig": "^0.7.0",
     "vue-tsc": "^3.0.5"
   }
 }

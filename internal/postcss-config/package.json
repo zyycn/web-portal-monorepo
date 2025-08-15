@@ -1,0 +1,23 @@
+{
+  "name": "@internal/postcss-config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "stub": "pnpm unbuild --stub"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "dependencies": {
+    "postcss-preset-env": "^10.2.4",
+    "postcss-pxtorem": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/postcss-pxtorem": "^6.1.0"
+  }
+}
