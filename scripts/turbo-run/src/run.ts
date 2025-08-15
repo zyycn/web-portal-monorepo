@@ -1,4 +1,4 @@
-import { cancel, isCancel, select } from '@clack/prompts'
+import { cancel, isCancel, note, select } from '@clack/prompts'
 import { execSync } from 'child_process'
 
 type FilterType = (RegExp | string)[] | RegExp | string
@@ -47,13 +47,20 @@ function getFilteredPackages(filter?: FilterType): string[] {
 }
 
 async function run(options: RunOptions) {
+  note('🚀 Running turbo...')
+
   const { command } = options
+
+  if (!command) {
+    cancel('❌ No command found')
+    return
+  }
 
   const pkgs = getFilteredPackages('@app')
 
   if (!pkgs.length) {
-    console.error('No app found')
-    process.exit(1)
+    cancel('❌ No app found')
+    return
   }
 
   const selectPkg = await select({
@@ -66,12 +73,12 @@ async function run(options: RunOptions) {
 
   if (isCancel(selectPkg)) {
     cancel('👋 Has cancelled')
-    process.exit(0)
+    return
   }
 
   if (!selectPkg) {
-    console.error('No app selected')
-    process.exit(1)
+    cancel('❌ No app selected')
+    return
   }
 
   execSync(`pnpm --filter=${selectPkg} run ${command}`, {

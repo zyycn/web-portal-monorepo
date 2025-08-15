@@ -6,11 +6,11 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo-run dev",
-    "dev:web-vue": "pnpm --filter @apps/web-vue dev",
     "preview": "turbo-run preview",
     "postinstall": "pnpm -r run stub",
     "preinstall": "npx only-allow pnpm",
-    "prepare": "husky"
+    "prepare": "husky",
+    "update:deps": "pnpm update --latest -r"
   },
   "packageManager": "pnpm@10.14.0",
   "dependencies": {
@@ -32,7 +32,7 @@
     "@internal/tsconfig": "workspace:^",
     "@internal/vite-config": "workspace:^",
     "@scripts/turbo-run": "workspace:^",
-    "@types/node": "^24.2.1",
+    "@types/node": "^24.3.0",
     "eslint": "^9.33.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.5",
@@ -40,10 +40,10 @@
     "prettier": "^3.6.2",
     "sass": "^1.90.0",
     "stylelint": "^16.23.1",
-    "tailwindcss": "^4.1.11",
-    "turbo": "^2.5.5",
+    "tailwindcss": "^4.1.12",
+    "turbo": "^2.5.6",
     "typescript": "^5.9.2",
-    "unbuild": "^3.6.0",
+    "unbuild": "^3.6.1",
     "vite": "^7.1.2"
   },
   "engines": {
