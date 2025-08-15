@@ -25,7 +25,7 @@ export function copyText(text: string) {
 /**
  * 生成随机ID
  */
-export function generateHexID(): string {
+export function generateRandomId(): string {
   const buffer = new Uint8Array(8)
   window.crypto.getRandomValues(buffer)
   return Array.from(buffer, byte => byte.toString(16).padStart(2, '0')).join('')

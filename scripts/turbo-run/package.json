@@ -4,8 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "stub": "pnpm unbuild --stub",
-    "test": "node ./dist/index.mjs"
+    "stub": "pnpm unbuild --stub"
   },
   "bin": {
     "turbo-run": "./bin/turbo-run.mjs"

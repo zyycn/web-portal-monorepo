@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { generateRandomId } from '@packages/utils'
+
 import HelloWorld from '@/components/HelloWorld.vue'
+
+console.log(generateRandomId())
 </script>
 
 <template>
