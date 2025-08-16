@@ -10,6 +10,7 @@
     "postinstall": "pnpm -r run stub",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",
+    "install:deps": "turbo-install",
     "update:deps": "pnpm update --latest -r"
   },
   "packageManager": "pnpm@10.14.0",
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@internal/eslint-config": "workspace:^",
     "@internal/lint-staged-config": "workspace:^",
+    "@internal/node-utils": "workspace:^",
     "@internal/postcss-config": "workspace:^",
     "@internal/prettier-config": "workspace:^",
     "@internal/stylelint-config": "workspace:^",

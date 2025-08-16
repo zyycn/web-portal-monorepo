@@ -7,12 +7,17 @@
     "stub": "pnpm unbuild --stub"
   },
   "bin": {
-    "turbo-run": "./bin/turbo-run.mjs"
+    "turbo-run": "./bin/turbo-run.mjs",
+    "turbo-install": "./bin/turbo-install.mjs"
   },
   "exports": {
-    ".": {
-      "default": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+    "./run": {
+      "default": "./dist/run/index.mjs",
+      "types": "./dist/run/index.d.ts"
+    },
+    "./install": {
+      "default": "./dist/install/index.mjs",
+      "types": "./dist/install/index.d.ts"
     }
   },
   "dependencies": {
