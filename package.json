@@ -5,17 +5,19 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo-run dev",
-    "preview": "turbo-run preview",
-    "postinstall": "pnpm -r run stub",
+    "clean": "node ./scripts/clean/index.mjs",
+    "dev": "turbo-run run dev",
+    "postinstall": "pnpm run -r --parallel stub",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",
-    "update:deps": "pnpm update --latest -r"
+    "preview": "turbo-run preview",
+    "reinstall": "pnpm cleandep && pnpm install",
+    "updatedep": "pnpm update --latest -r"
   },
   "packageManager": "pnpm@10.14.0",
   "dependencies": {
     "dayjs": "^1.11.13",
-    "es-toolkit": "^1.39.9",
+    "es-toolkit": "^1.39.10",
     "modern-normalize": "^3.0.1",
     "nprogress": "^0.2.0",
     "qs": "^6.14.0"
@@ -23,6 +25,7 @@
   "devDependencies": {
     "@internal/eslint-config": "workspace:^",
     "@internal/lint-staged-config": "workspace:^",
+    "@internal/node-utils": "workspace:^",
     "@internal/postcss-config": "workspace:^",
     "@internal/prettier-config": "workspace:^",
     "@internal/stylelint-config": "workspace:^",
