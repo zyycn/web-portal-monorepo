@@ -1,12 +1,22 @@
 <script setup lang="ts">
 import { generateRandomId } from '@packages/utils'
 
+import { test } from '@/api'
 import HelloWorld from '@/components/HelloWorld.vue'
 
 console.log(generateRandomId())
+
+const login = async () => {
+  const res = await test.getDbList({
+    password: '123456789',
+    username: 'test'
+  })
+  console.log(res)
+}
 </script>
 
 <template>
+  <button @click="login">test</button>
   <div class="columns-2">
     <p>Well, let me tell you something, ...</p>
     <p class="break-inside-avoid-column">Sure, go ahead, laugh...</p>

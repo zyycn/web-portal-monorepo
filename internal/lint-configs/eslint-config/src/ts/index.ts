@@ -32,6 +32,7 @@ const recommended = config(
       unicorn
     },
     rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
       'no-multiple-empty-lines': ['warn', { max: 1 }],
       'no-unexpected-multiline': 'error',
       'no-useless-escape': 'off',

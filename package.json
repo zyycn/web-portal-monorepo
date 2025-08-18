@@ -6,7 +6,7 @@
   "scripts": {
     "build": "turbo run build",
     "clean": "node ./scripts/clean/index.mjs",
-    "dev": "turbo-run run dev",
+    "dev": "turbo-run dev",
     "postinstall": "pnpm run -r --parallel stub",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",
