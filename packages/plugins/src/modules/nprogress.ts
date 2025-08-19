@@ -12,7 +12,7 @@ nprogress.configure({
 
 nprogress.start()
 
-const useWithRouter = (router: Router) => {
+const useWithVueRouter = (router: Router) => {
   router.beforeEach(async (to, from, next) => {
     nprogress.start()
     next()
@@ -25,6 +25,6 @@ const useWithRouter = (router: Router) => {
 
 export default {
   install(_app: App, router: Router) {
-    useWithRouter(router)
+    useWithVueRouter(router)
   }
 }

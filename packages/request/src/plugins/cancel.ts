@@ -19,7 +19,7 @@ const generateKey = (config: AxiosRequestConfig): string => {
   return `${config.method}-${config.url}-${JSON.stringify(config.params)}-${JSON.stringify(config.data)}`
 }
 
-const cancel = (): AxiosPlugin => {
+export default (): AxiosPlugin => {
   const duplicateMap = new Map<string, AbortController>()
 
   return {
@@ -67,5 +67,3 @@ const cancel = (): AxiosPlugin => {
     }
   }
 }
-
-export { cancel }

@@ -5,15 +5,15 @@ import { stringify } from 'qs'
 
 import type { AxiosPlugin } from '../core'
 
-interface SignConfig {
+interface SignParmas {
   params?: Record<string, number | string>
   salt?: string
 }
 
-const sign = (getConfig?: () => SignConfig): AxiosPlugin => {
+export default (getParams?: () => SignParmas): AxiosPlugin => {
   return {
     request(config) {
-      const { params, salt } = getConfig ? getConfig() : {}
+      const { params, salt } = getParams ? getParams() : {}
 
       let value = ''
 
@@ -39,5 +39,3 @@ const sign = (getConfig?: () => SignConfig): AxiosPlugin => {
     }
   }
 }
-
-export { sign }

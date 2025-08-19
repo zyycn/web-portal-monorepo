@@ -15,7 +15,7 @@ function getErrorMessage(code?: string, message?: string): string {
   return '请求似乎遇到了问题，请稍后重试'
 }
 
-const error = (callback?: (message: string) => void): AxiosPlugin => {
+export default (callback?: (message: string) => void): AxiosPlugin => {
   return {
     responseError(error) {
       if (isCancel(error)) return error
@@ -26,5 +26,3 @@ const error = (callback?: (message: string) => void): AxiosPlugin => {
     }
   }
 }
-
-export { error }

@@ -2,7 +2,7 @@ import { stringify } from 'qs'
 
 import type { AxiosPlugin } from '../core'
 
-const serializer = (arrayFormat?: 'comma'): AxiosPlugin => {
+export default (arrayFormat?: 'comma'): AxiosPlugin => {
   return {
     request(config) {
       if (config.params) {
@@ -16,5 +16,3 @@ const serializer = (arrayFormat?: 'comma'): AxiosPlugin => {
     }
   }
 }
-
-export { serializer }

@@ -5,7 +5,7 @@ import type { AxiosPlugin } from '../core'
  * @param getParams
  * @returns
  */
-const withParams = (getParams?: () => Record<string, number | string>): AxiosPlugin => {
+export default (getParams?: () => Record<string, number | string>): AxiosPlugin => {
   return {
     request(config) {
       const params = getParams ? getParams() : {}
@@ -22,5 +22,3 @@ const withParams = (getParams?: () => Record<string, number | string>): AxiosPlu
     }
   }
 }
-
-export { withParams }

@@ -1,6 +1,6 @@
 import type { AxiosPlugin } from '../core'
 
-const auth = (getToken: () => null | string): AxiosPlugin => {
+export default (getToken: () => null | string): AxiosPlugin => {
   return {
     request(config) {
       const token = getToken() || ''
@@ -11,5 +11,3 @@ const auth = (getToken: () => null | string): AxiosPlugin => {
     }
   }
 }
-
-export { auth }

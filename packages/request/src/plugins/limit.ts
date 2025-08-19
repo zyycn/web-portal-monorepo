@@ -48,7 +48,7 @@ class LimitPromise {
   }
 }
 
-const limit = (max: number = 5): AxiosPlugin => {
+export default (max: number = 5): AxiosPlugin => {
   const limit = new LimitPromise(max)
 
   return {
@@ -63,5 +63,3 @@ const limit = (max: number = 5): AxiosPlugin => {
     }
   }
 }
-
-export { limit }

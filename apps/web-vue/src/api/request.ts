@@ -1,6 +1,6 @@
 import axios from '@packages/request'
 import { useAxiosPlugin } from '@packages/request/core'
-import * as plugins from '@packages/request/plugins'
+import plugins from '@packages/request/plugins'
 import { generateRandomId } from '@packages/utils'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL

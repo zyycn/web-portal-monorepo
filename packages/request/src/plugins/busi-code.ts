@@ -1,6 +1,6 @@
 import type { AxiosPlugin } from '../core'
 
-const busiCode = (callback?: (message: string) => void): AxiosPlugin => {
+export default (callback?: (message: string) => void): AxiosPlugin => {
   return {
     response(response) {
       const { data } = response
@@ -15,5 +15,3 @@ const busiCode = (callback?: (message: string) => void): AxiosPlugin => {
     }
   }
 }
-
-export { busiCode }
