@@ -1,6 +1,6 @@
 import type { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 
-import type { AxiosPlugin } from '../utils/plugin-manager'
+import type { AxiosPlugin } from '../core'
 
 // 扩展 Axios 类型定义
 declare module 'axios' {

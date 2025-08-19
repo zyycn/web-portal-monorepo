@@ -1,6 +1,6 @@
 import { isCancel } from 'axios'
 
-import type { AxiosPlugin } from '../utils/plugin-manager'
+import type { AxiosPlugin } from '../core'
 
 // 错误消息映射函数
 function getErrorMessage(code?: string, message?: string): string {
@@ -18,7 +18,7 @@ function getErrorMessage(code?: string, message?: string): string {
 const error = (callback?: (message: string) => void): AxiosPlugin => {
   return {
     responseError(error) {
-      if (isCancel(error)) return Promise.reject()
+      if (isCancel(error)) return error
 
       if (callback) callback(getErrorMessage(error.code, error.message))
 

@@ -1,17 +1,46 @@
 import axios from '@packages/request'
-import { cancel, error, limit, PluginManager } from '@packages/request/plugins'
+import { useAxiosPlugin } from '@packages/request/core'
+import { auth, error, serializer, sign, withParams } from '@packages/request/plugins'
+import { generateRandomId } from '@packages/utils'
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 10000
 })
 
-const plugins = new PluginManager()
+const axiosPlugin = new useAxiosPlugin()
 
-plugins.use(cancel())
-plugins.use(limit())
-plugins.use(error())
+axiosPlugin.use(serializer())
 
-plugins.install(request)
+axiosPlugin.use(
+  withParams(() => {
+    return {
+      userId: ''
+    }
+  })
+)
+
+axiosPlugin.use(
+  sign(() => {
+    return {
+      params: {
+        appCode: 'bbs',
+        tId: generateRandomId(),
+        ts: new Date().getTime()
+      },
+      salt: 'salt'
+    }
+  })
+)
+
+axiosPlugin.use(
+  auth(() => {
+    return sessionStorage.getItem('token')
+  })
+)
+
+axiosPlugin.use(error())
+
+axiosPlugin.install(request)
 
 export default request

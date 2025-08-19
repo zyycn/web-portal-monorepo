@@ -11,7 +11,7 @@ export interface AxiosPlugin {
   responseError?: (error: any, instance: AxiosInstance) => any
 }
 
-export class PluginManager {
+export class useAxiosPlugin {
   private plugins: AxiosPlugin[] = []
 
   // 挂载插件到 Axios 实例

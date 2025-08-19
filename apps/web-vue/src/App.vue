@@ -7,8 +7,8 @@ import HelloWorld from '@/components/HelloWorld.vue'
 console.log(generateRandomId())
 
 const login = async () => {
-  const res = await test.getDbList({
-    password: '123456789',
+  const res = await test.loginUsername({
+    password: '123456',
     username: 'test'
   })
   console.log(res)
@@ -16,30 +16,8 @@ const login = async () => {
 </script>
 
 <template>
-  <button @click="login">test</button>
-  <div class="columns-2">
-    <p>Well, let me tell you something, ...</p>
-    <p class="break-inside-avoid-column">Sure, go ahead, laugh...</p>
-    <p>Maybe we can live without...</p>
-    <p>Look. If you think this is...</p>
-  </div>
-  <!-- <div class="grid h-500 grid-cols-3 content-stretch gap-3 border">
-    <div v-for="item in 7" :key="item" class="border bg-red-500">
-      {{ item }}
-    </div>
-  </div> -->
-  <div class="flex items-center justify-center truncate">
-    <span class="w-100 truncate"
-      >Vite + VueVite + VueVite + VueVite + VueVite + VueVite + VueVite + VueVite + VueVite + VueVite + VueVite + VueVite + VueVite + VueVite + VueVite +
-      VueVite + VueVite + VueVite + VueVite + VueVite + Vue</span
-    >
-    <a href="https://vite.dev" target="_blank">
-      <img src="/favicon.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
+  <el-button type="primary" class="h-30" @click="login">test</el-button>
+  <div class="text-[40px] text-[#42b883]">TTTTTTTTTTT</div>
   <HelloWorld msg="Vite + Vue" />
 </template>
 

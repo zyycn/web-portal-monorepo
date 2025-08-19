@@ -2,7 +2,7 @@ import type { InternalAxiosRequestConfig } from 'axios'
 
 import axios from 'axios'
 
-import type { AxiosPlugin } from '../utils/plugin-manager'
+import type { AxiosPlugin } from '../core'
 
 interface AxiosRequestConfig extends InternalAxiosRequestConfig {
   skipLimit?: boolean

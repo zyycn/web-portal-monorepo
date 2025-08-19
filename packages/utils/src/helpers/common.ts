@@ -53,3 +53,12 @@ export function setRootFontSize(minClientWidth: number, maxClientWidth: number) 
   resize()
   window.onresize = resize
 }
+
+/**
+ * 对象排序转字符串
+ */
+export function toSortedKeyValueString(obj: Record<string, unknown>): string {
+  const sortedKeys = Object.keys(obj).sort()
+  const pairs = sortedKeys.map(key => `${key}${String(obj[key])}`)
+  return pairs.join('')
+}
