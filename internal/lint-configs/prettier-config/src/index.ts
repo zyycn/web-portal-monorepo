@@ -1,4 +1,6 @@
-export default {
+import type { Config } from 'prettier'
+
+const config: Config = {
   arrowParens: 'avoid',
   bracketSpacing: true,
   endOfLine: 'lf',
@@ -9,3 +11,5 @@ export default {
   singleQuote: true,
   trailingComma: 'none'
 }
+
+export default config
