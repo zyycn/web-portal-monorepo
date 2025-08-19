@@ -5,4 +5,13 @@ packages:
   - packages/*
   - scripts/*
 
+ignoredBuiltDependencies:
+  - unrs-resolver
+
 linkWorkspacePackages: true
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@tailwindcss/oxide'
+  - esbuild
+  - vue-demi

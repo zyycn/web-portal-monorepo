@@ -1,10 +1,17 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 
+import { test } from '@/api'
+
 import HelloWorld from './components/HelloWorld.vue'
+
+const login = async () => {
+  test.loginUsername({ password: '123456', username: 'admin' })
+}
 </script>
 
 <template>
+  <el-button type="primary" @click="login">login</el-button>
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 

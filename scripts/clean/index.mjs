@@ -10,7 +10,7 @@ try {
   execSync('pnpx rimraf node_modules && pnpm -r exec pnpx rimraf node_modules', { stdio: 'inherit' })
 
   // Clean turbo cache
-  execSync('pnpm -r exec pnpx rimraf .turbo', { stdio: 'inherit' })
+  execSync('pnpx rimraf .turbo && pnpm -r exec pnpx rimraf .turbo', { stdio: 'inherit' })
 
   console.log('🎉 Cache cleaned successfully.')
 } catch (error) {

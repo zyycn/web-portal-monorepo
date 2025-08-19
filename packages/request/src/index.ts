@@ -1,4 +1,5 @@
 export * from './plugins/auth'
+export * from './plugins/busi-code'
 export * from './plugins/cancel'
 export * from './plugins/error'
 export * from './plugins/limit'

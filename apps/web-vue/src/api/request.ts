@@ -1,46 +1,49 @@
 import axios from '@packages/request'
 import { useAxiosPlugin } from '@packages/request/core'
-import { auth, error, serializer, sign, withParams } from '@packages/request/plugins'
+import * as plugins from '@packages/request/plugins'
 import { generateRandomId } from '@packages/utils'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+const REQUEST_TIMEOUT = 10000
+const APP_CODE = 'bbs'
+
+// 创建请求实例
 const request = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-  timeout: 10000
+  baseURL: API_BASE_URL,
+  timeout: REQUEST_TIMEOUT
 })
 
-const axiosPlugin = new useAxiosPlugin()
+// 创建插件实例
+const requestPlugin = new useAxiosPlugin()
 
-axiosPlugin.use(serializer())
+const getDynamicParams = () => ({
+  userId: ''
+})
 
-axiosPlugin.use(
-  withParams(() => {
-    return {
-      userId: ''
-    }
-  })
-)
+const getSignParams = () => ({
+  params: {
+    appCode: APP_CODE,
+    tId: generateRandomId(),
+    ts: new Date().getTime()
+  },
+  salt: ''
+})
 
-axiosPlugin.use(
-  sign(() => {
-    return {
-      params: {
-        appCode: 'bbs',
-        tId: generateRandomId(),
-        ts: new Date().getTime()
-      },
-      salt: 'salt'
-    }
-  })
-)
+const getToken = () => {
+  return sessionStorage.getItem('token')
+}
 
-axiosPlugin.use(
-  auth(() => {
-    return sessionStorage.getItem('token')
-  })
-)
+const handleError = (message: string) => {
+  ElMessage.error(message)
+}
 
-axiosPlugin.use(error())
+requestPlugin.use(plugins.serializer())
+requestPlugin.use(plugins.withParams(getDynamicParams))
+requestPlugin.use(plugins.sign(getSignParams))
+requestPlugin.use(plugins.auth(getToken))
+requestPlugin.use(plugins.busiCode(handleError))
+requestPlugin.use(plugins.error(handleError))
 
-axiosPlugin.install(request)
+requestPlugin.install(request)
 
 export default request
