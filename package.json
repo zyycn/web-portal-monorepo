@@ -17,9 +17,7 @@
   "packageManager": "pnpm@10.14.0",
   "dependencies": {
     "dayjs": "^1.11.13",
-    "es-toolkit": "^1.39.10",
-    "modern-normalize": "^3.0.1",
-    "nprogress": "^0.2.0"
+    "es-toolkit": "^1.39.10"
   },
   "devDependencies": {
     "@internal/eslint-config": "workspace:^",
@@ -31,6 +29,8 @@
     "@internal/tailwindcss-config": "workspace:^",
     "@internal/tsconfig": "workspace:^",
     "@internal/vite-config": "workspace:^",
+    "@packages/plugins": "workspace:^",
+    "@packages/request": "workspace:^",
     "@packages/utils": "workspace:^",
     "@scripts/turbo-run": "workspace:^",
     "@types/node": "^24.3.0",

@@ -1,3 +1,5 @@
+import { nprogress } from '@packages/plugins'
+import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 
 import './styles/index.scss'
@@ -6,5 +8,12 @@ import '@internal/tailwindcss-config'
 import '@internal/tailwindcss-config/preflight'
 
 import App from './App.vue'
+import router from './router'
 
-createApp(App).mount('#app')
+const app = createApp(App)
+
+app.use(createPinia())
+app.use(router)
+app.use(nprogress, router)
+
+app.mount('#app')
