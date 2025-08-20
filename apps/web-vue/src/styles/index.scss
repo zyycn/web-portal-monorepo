@@ -1,4 +1,5 @@
-@import '@internal/tailwindcss-config/preflight';
+// 重置样式
+@use '@internal/tailwindcss-config/preflight';
 
 * {
   outline: none;

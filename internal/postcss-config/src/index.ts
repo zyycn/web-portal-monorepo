@@ -4,11 +4,11 @@ import presetEnv from 'postcss-preset-env'
 import pxtorem from 'postcss-pxtorem'
 
 interface defineConfigOptions {
-  adaptivePages?: string[]
+  adaptive?: string[]
 }
 
 const defineConfig = (options: defineConfigOptions = {}) => {
-  const { adaptivePages = [] } = options
+  const { adaptive = [] } = options
 
   return {
     plugins: [
@@ -16,7 +16,7 @@ const defineConfig = (options: defineConfigOptions = {}) => {
       pxtorem({
         exclude: (file: string) => {
           const filePath = file.split(sep).join('/')
-          return findIndex(adaptivePages, (page: string) => filePath.includes(page)) === -1
+          return findIndex(adaptive, (page: string) => filePath.includes(page)) === -1
         },
         minPixelValue: 0,
         propList: ['*'],

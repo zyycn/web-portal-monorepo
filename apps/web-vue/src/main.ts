@@ -2,8 +2,9 @@ import { nprogress } from '@packages/plugins'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 
-import './styles/index.scss'
-import './styles/tailwindcss.css'
+import '@/styles/index.scss'
+import '@/styles/tailwindcss.css'
+
 import App from './App.vue'
 import router from './router'
 
