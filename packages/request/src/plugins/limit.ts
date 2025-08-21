@@ -2,7 +2,7 @@ import type { InternalAxiosRequestConfig } from 'axios'
 
 import axios from 'axios'
 
-import type { AxiosPlugin } from '../core'
+import type { AxiosPluginType } from '../core'
 
 interface AxiosRequestConfig extends InternalAxiosRequestConfig {
   skipLimit?: boolean
@@ -48,7 +48,7 @@ class LimitPromise {
   }
 }
 
-export default (max: number = 5): AxiosPlugin => {
+export default (max: number = 5): AxiosPluginType => {
   const limit = new LimitPromise(max)
 
   return {

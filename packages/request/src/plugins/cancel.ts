@@ -1,6 +1,6 @@
 import type { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 
-import type { AxiosPlugin } from '../core'
+import type { AxiosPluginType } from '../core'
 
 // 扩展 Axios 类型定义
 declare module 'axios' {
@@ -19,7 +19,7 @@ const generateKey = (config: AxiosRequestConfig): string => {
   return `${config.method}-${config.url}-${JSON.stringify(config.params)}-${JSON.stringify(config.data)}`
 }
 
-export default (): AxiosPlugin => {
+export default (): AxiosPluginType => {
   const duplicateMap = new Map<string, AbortController>()
 
   return {

@@ -3,14 +3,14 @@ import SHA256 from 'crypto-js/sha256'
 import { cloneDeep } from 'es-toolkit'
 import { stringify } from 'qs'
 
-import type { AxiosPlugin } from '../core'
+import type { AxiosPluginType } from '../core'
 
 interface SignParmas {
   params?: Record<string, number | string>
   salt?: string
 }
 
-export default (getParams?: () => SignParmas): AxiosPlugin => {
+export default (getParams?: () => SignParmas): AxiosPluginType => {
   return {
     request(config) {
       const { params, salt } = getParams ? getParams() : {}

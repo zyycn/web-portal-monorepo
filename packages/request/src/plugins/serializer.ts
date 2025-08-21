@@ -1,8 +1,8 @@
 import { stringify } from 'qs'
 
-import type { AxiosPlugin } from '../core'
+import type { AxiosPluginType } from '../core'
 
-export default (arrayFormat?: 'comma'): AxiosPlugin => {
+export default (arrayFormat?: 'comma'): AxiosPluginType => {
   return {
     request(config) {
       if (config.params) {

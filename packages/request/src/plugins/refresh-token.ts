@@ -1,6 +1,6 @@
-import type { AxiosPlugin } from '../core'
+import type { AxiosPluginType } from '../core'
 
-export default (refresh: () => Promise<void>): AxiosPlugin => {
+export default (refresh: () => Promise<void>): AxiosPluginType => {
   return {
     response: async (response, instance) => {
       const { config, data } = response

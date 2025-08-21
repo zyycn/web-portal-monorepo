@@ -1,6 +1,6 @@
 import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 
-export interface AxiosPlugin {
+export interface AxiosPluginType {
   // 请求前置处理
   request?: (config: InternalAxiosRequestConfig, instance: AxiosInstance) => InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig>
   // 请求错误处理
@@ -11,8 +11,8 @@ export interface AxiosPlugin {
   responseError?: (error: any, instance: AxiosInstance) => any
 }
 
-export class useAxiosPlugin {
-  private plugins: AxiosPlugin[] = []
+export class AxiosPlugin {
+  private plugins: AxiosPluginType[] = []
 
   // 挂载插件到 Axios 实例
   install(axiosInstance: AxiosInstance) {
@@ -50,7 +50,7 @@ export class useAxiosPlugin {
   }
 
   // 注册插件（支持链式调用）
-  use(plugin: AxiosPlugin): this {
+  use(plugin: AxiosPluginType): this {
     this.plugins.push(plugin)
     return this
   }

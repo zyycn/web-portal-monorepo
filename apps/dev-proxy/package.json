@@ -1,0 +1,11 @@
+{
+  "name": "dev-proxy",
+  "description": "门户",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "express": "^5.1.0",
+    "http-proxy-middleware": "^3.0.5"
+  }
+}

@@ -1,11 +1,11 @@
-import type { AxiosPlugin } from '../core'
+import type { AxiosPluginType } from '../core'
 
 /**
  * 用于请求携带一些公共参数
  * @param getParams
  * @returns
  */
-export default (getParams?: () => Record<string, number | string>): AxiosPlugin => {
+export default (getParams?: () => Record<string, number | string>): AxiosPluginType => {
   return {
     request(config) {
       const params = getParams ? getParams() : {}

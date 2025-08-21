@@ -44,7 +44,9 @@ const commonConfig = (): UserConfig => {
           lintCommand: 'stylelint src/**/*.{css,scss,vue}'
         },
         terminal: false,
-        vueTsc: true
+        vueTsc: {
+          tsconfigPath: 'tsconfig.app.json'
+        }
       }),
       compression({
         algorithm: 'gzip',
@@ -68,6 +70,9 @@ const commonConfig = (): UserConfig => {
       alias: {
         '@': resolve(root, 'src')
       }
+    },
+    server: {
+      strictPort: true
     }
   }
 }

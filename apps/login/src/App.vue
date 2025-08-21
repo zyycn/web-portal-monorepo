@@ -7,7 +7,7 @@ const login = async () => {
     username: 'test'
   })
 
-  window.location.href = '/portal'
+  sessionStorage.setItem('login', '123')
 }
 </script>
 

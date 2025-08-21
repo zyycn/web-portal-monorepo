@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { test } from '@/api'
 
-const login = () => {
-  test.loginUsername({
+const login = async () => {
+  const res = await test.loginUsername({
     password: '123456',
     username: 'test'
   })
+
+  console.log(res)
+  // sessionStorage.setItem('token', res)
 }
 </script>
 
 <template>
-  <button @click="login">门户</button>
+  <el-button @click="login">门户</el-button>
 </template>

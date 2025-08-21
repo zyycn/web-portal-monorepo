@@ -5,17 +5,25 @@ import { test } from '@/api'
 
 import HelloWorld from './components/HelloWorld.vue'
 
-const login = () => {
-  test.loginUsername({
+const login = async () => {
+  const res = await test.loginUsername({
     password: '123456',
-    username: 'test1'
+    username: 'test'
   })
+
+  console.log(res)
+  localStorage.setItem('token', JSON.stringify(res.token))
+}
+
+const handleOpenTab = () => {
+  window.open('/login')
 }
 </script>
 
 <template>
   <header>
     <el-button type="primary" @click="login">LOGIN</el-button>
+    <el-button type="primary" @click="handleOpenTab">打开新标签页</el-button>
     <div>
       <el-link href="https://element-plus.org" target="_blank" class="mr-2">default</el-link>
       <el-link type="primary">primary</el-link>

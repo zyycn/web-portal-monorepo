@@ -1,9 +1,9 @@
-import type { AxiosPlugin } from '../core'
+import type { AxiosPluginType } from '../core'
 
 /**
  * 业务状态码处理插件，确保此插件作为最后一个使用
  */
-export default (callback?: (message: string) => void): AxiosPlugin => {
+export default (callback?: (message: string) => void): AxiosPluginType => {
   return {
     response(response) {
       const { data } = response

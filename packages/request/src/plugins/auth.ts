@@ -1,6 +1,6 @@
-import type { AxiosPlugin } from '../core'
+import type { AxiosPluginType } from '../core'
 
-export default (getToken: () => null | string): AxiosPlugin => {
+export default (getToken: () => null | string): AxiosPluginType => {
   return {
     request(config) {
       const token = getToken() || ''
