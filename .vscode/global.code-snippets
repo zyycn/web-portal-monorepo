@@ -12,10 +12,7 @@
       "",
       "  </div>",
       "</template>",
-      "",
-      "<style scoped lang=\"scss\">",
-      "",
-      "</style>"
+      ""
     ],
     "description": "Vue3 + TS + Scss 基础模板"
   }

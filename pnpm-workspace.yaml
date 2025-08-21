@@ -4,12 +4,12 @@ packages:
   - internal/lint-configs/*
   - packages/*
   - scripts/*
-
-ignoredBuiltDependencies:
-  - unrs-resolver
+  - services/*
 
 linkWorkspacePackages: true
 
+ignoredBuiltDependencies:
+  - unrs-resolver
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@tailwindcss/oxide'

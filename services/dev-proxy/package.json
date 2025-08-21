@@ -1,0 +1,16 @@
+{
+  "name": "@services/dev-proxy",
+  "description": "开发代理服务",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "bin": {
+    "dev-proxy": "./bin/dev-proxy.mjs"
+  },
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "vue": "^3.5.18"
+  }
+}
