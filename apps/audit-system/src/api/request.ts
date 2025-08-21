@@ -37,7 +37,11 @@ const getNewToken = () => {
 }
 
 const handleError = (message: string) => {
-  ElMessage.error(message)
+  ElMessage({
+    message,
+    plain: true,
+    type: 'error'
+  })
 }
 
 requestPlugin.use(plugins.serializer())
@@ -45,8 +49,8 @@ requestPlugin.use(plugins.withParams(getWithParams))
 requestPlugin.use(plugins.sign(getSignParams))
 requestPlugin.use(plugins.auth(getToken))
 requestPlugin.use(plugins.refreshToken(getNewToken))
-requestPlugin.use(plugins.busiCode(handleError))
 requestPlugin.use(plugins.error(handleError))
+requestPlugin.use(plugins.busiCode(handleError))
 
 requestPlugin.install(request)
 

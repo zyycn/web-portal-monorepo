@@ -1,0 +1,8 @@
+// 重置样式
+@use '@internal/tailwindcss-config/preflight';
+
+* {
+  outline: none;
+  scrollbar-color: #eaeaea transparent;
+  scrollbar-width: thin;
+}

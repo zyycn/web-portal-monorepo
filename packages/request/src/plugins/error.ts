@@ -15,6 +15,9 @@ function getErrorMessage(code?: string, message?: string): string {
   return '请求似乎遇到了问题，请稍后重试'
 }
 
+/**
+ * 捕获响应错误
+ */
 export default (callback?: (message: string) => void): AxiosPlugin => {
   return {
     responseError(error) {

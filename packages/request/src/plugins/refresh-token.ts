@@ -5,7 +5,9 @@ export default (refresh: () => Promise<void>): AxiosPlugin => {
     response: async (response, instance) => {
       const { config, data } = response
 
-      if (data.code.startsWith('10')) {
+      // 1010:Access token无效
+      // 1011:Access token已过期
+      if ([1010, 1011].includes(data.code)) {
         try {
           await refresh()
           return instance(config) // 重新发送原始请求

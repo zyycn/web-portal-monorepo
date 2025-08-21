@@ -36,7 +36,7 @@ const commonConfig = (): UserConfig => {
       tailwindcss(),
       checker_({
         eslint: {
-          lintCommand: 'eslint src',
+          lintCommand: 'eslint .',
           useFlatConfig: true
         },
         root,
@@ -44,9 +44,7 @@ const commonConfig = (): UserConfig => {
           lintCommand: 'stylelint src/**/*.{css,scss,vue}'
         },
         terminal: false,
-        vueTsc: {
-          tsconfigPath: 'tsconfig.app.json'
-        }
+        vueTsc: true
       }),
       compression({
         algorithm: 'gzip',

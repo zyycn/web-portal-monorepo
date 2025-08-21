@@ -1,0 +1,22 @@
+{
+  "vue-script-setup": {
+    "scope": "vue",
+    "prefix": "vbase",
+    "body": [
+      "<script setup lang=\"ts\">",
+      "",
+      "</script>",
+      "",
+      "<template>",
+      "  <div>",
+      "",
+      "  </div>",
+      "</template>",
+      "",
+      "<style scoped lang=\"scss\">",
+      "",
+      "</style>"
+    ],
+    "description": "Vue3 + TS + Scss 基础模板"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@apps/audit-system",
+  "description": "审计管理系统",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vueuse/core": "^13.7.0",
+    "element-plus": "^2.10.7",
+    "pinia": "^3.0.3",
+    "pinia-plugin-persistedstate": "^4.5.0",
+    "vue": "^3.5.18",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "vue-tsc": "^3.0.6"
+  }
+}
