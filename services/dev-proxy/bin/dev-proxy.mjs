@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
-import { execSync } from 'child_process'
+import { spawn } from 'child_process'
 
-execSync('pnpm --filter @services/dev-proxy dev', { stdio: 'inherit' })
+spawn('pnpm --filter @services/dev-proxy dev', {
+  shell: true,
+  stdio: 'inherit'
+})
