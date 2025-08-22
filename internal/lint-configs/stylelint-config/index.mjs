@@ -6,5 +6,8 @@ export default {
       customSyntax: 'postcss-html',
       files: ['*.html', '**/*.html']
     }
-  ]
+  ],
+  rules: {
+    'scss/at-rule-no-unknown': [true, { ignoreAtRules: ['theme', 'source'] }]
+  }
 }

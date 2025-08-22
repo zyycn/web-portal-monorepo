@@ -2,7 +2,7 @@ import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 
 import '@/styles/index.scss'
-import '@/styles/tailwindcss.css'
+import '@internal/tailwindcss-config'
 
 import App from './App.vue'
 

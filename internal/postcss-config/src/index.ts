@@ -12,7 +12,6 @@ const defineConfig = (options: defineConfigOptions = {}) => {
 
   return {
     plugins: [
-      presetEnv(),
       pxtorem({
         exclude: (file: string) => {
           const filePath = file.split(sep).join('/')
@@ -22,6 +21,9 @@ const defineConfig = (options: defineConfigOptions = {}) => {
         propList: ['*'],
         rootValue: 16,
         selectorBlackList: ['ignore-', 'html']
+      }),
+      presetEnv({
+        stage: 3
       })
     ]
   }
