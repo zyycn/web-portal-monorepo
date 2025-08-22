@@ -7,13 +7,9 @@
     "stub": "pnpm unbuild --stub"
   },
   "exports": {
-    "./ts": {
-      "types": "./dist/ts/index.d.ts",
-      "default": "./dist/ts/index.mjs"
-    },
-    "./vue": {
-      "types": "./dist/vue/index.d.ts",
-      "default": "./dist/vue/index.mjs"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
     }
   },
   "dependencies": {

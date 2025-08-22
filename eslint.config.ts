@@ -1,1 +1,1 @@
-export { default } from '@internal/eslint-config/ts'
+export { default } from '@internal/eslint-config'

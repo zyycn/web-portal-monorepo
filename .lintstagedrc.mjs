@@ -1,5 +1,1 @@
-import { defineConfig } from '@internal/lint-staged-config'
-
-export default defineConfig({
-  enabledRules: ['javascript']
-})
+export { default } from '@internal/lint-staged-config'
