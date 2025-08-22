@@ -75,16 +75,18 @@ const apps = [
 </script>
 
 <template>
-  <el-card class="m-20">
-    <el-table border :data="apps">
-      <el-table-column label="应用名称" prop="appName" />
-      <el-table-column label="应用端口" prop="appPort" />
-      <el-table-column label="启动命令" prop="command" />
-      <el-table-column label="操作">
-        <template #default="scope">
-          <el-button type="primary" @click="sendCommand(scope.row)">启动</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-  </el-card>
+  <div class="m-120">
+    <el-card class="m-20">
+      <el-table border :data="apps">
+        <el-table-column label="应用名称" prop="appName" />
+        <el-table-column label="应用端口" prop="appPort" />
+        <el-table-column label="启动命令" prop="command" />
+        <el-table-column label="操作">
+          <template #default="scope">
+            <el-button type="primary" @click="sendCommand(scope.row)">启动</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+  </div>
 </template>

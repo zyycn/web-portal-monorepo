@@ -7,11 +7,3 @@ packages:
   - services/*
 
 linkWorkspacePackages: true
-
-ignoredBuiltDependencies:
-  - unrs-resolver
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@tailwindcss/oxide'
-  - esbuild
-  - vue-demi

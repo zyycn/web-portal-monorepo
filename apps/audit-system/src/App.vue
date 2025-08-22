@@ -21,7 +21,7 @@ const handleOpenTab = () => {
 </script>
 
 <template>
-  <header>
+  <header class="m-20">
     <el-button type="primary" @click="login">LOGIN</el-button>
     <el-button type="primary" @click="handleOpenTab">打开新标签页</el-button>
     <div>

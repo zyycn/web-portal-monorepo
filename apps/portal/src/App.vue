@@ -13,5 +13,7 @@ const login = async () => {
 </script>
 
 <template>
-  <el-button @click="login">门户</el-button>
+  <div class="m-30">
+    <el-button @click="login">门户</el-button>
+  </div>
 </template>

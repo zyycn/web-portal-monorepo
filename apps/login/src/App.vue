@@ -12,5 +12,7 @@ const login = async () => {
 </script>
 
 <template>
-  <el-button @click="login">登录1</el-button>
+  <div class="m-30">
+    <el-button @click="login">登录1</el-button>
+  </div>
 </template>

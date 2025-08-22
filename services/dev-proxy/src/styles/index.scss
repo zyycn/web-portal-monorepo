@@ -1,5 +1,5 @@
 // 重置样式
-// @use '@internal/tailwindcss-config/preflight';
+@use '@internal/tailwindcss-config/preflight';
 
 * {
   outline: none;

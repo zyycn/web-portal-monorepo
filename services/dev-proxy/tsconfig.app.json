@@ -6,5 +6,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*", "src/**/*.vue", "**/*.ts", "vite.config.ts", "proxy.mjs"]
+  "include": ["src/**/*", "src/**/*.vue", "**/*.ts"]
 }
