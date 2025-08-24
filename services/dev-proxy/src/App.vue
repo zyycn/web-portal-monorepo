@@ -39,8 +39,6 @@ class AppMonitorClient {
   private updateApp(app: App) {
     if (!this.apps) return
 
-    console.log(app)
-
     const findApp = find(this.apps.value, { appName: app.appName })
     if (findApp) Object.assign(findApp, app)
   }
@@ -51,7 +49,6 @@ const appMonitorClient = new AppMonitorClient()
 
 const apps = computed(() => appMonitorClient.apps.value)
 
-// 发送事件
 const startApp = (app: App) => {
   appMonitorClient.startApp(app.appName)
 }
@@ -59,20 +56,41 @@ const startApp = (app: App) => {
 const stopApp = (app: App) => {
   appMonitorClient.stopApp(app.appName)
 }
+
+const openAppInBrowser = (app: App) => {
+  window.open(`/${app.appName}`, '_blank')
+}
+
+const proxyPort = computed(() => {
+  return import.meta.env.VITE_APP_PORT
+})
 </script>
 
 <template>
   <el-card class="m-20">
     <el-table border :data="apps">
       <el-table-column label="应用名称" prop="appName" />
-      <el-table-column label="应用端口" prop="appPort" />
-      <el-table-column label="启动命令" prop="appCommand" />
-      <el-table-column label="状态" prop="status" />
-      <el-table-column label="PID" prop="pid" />
-      <el-table-column label="操作">
+      <el-table-column label="真实端口" prop="appPort" />
+      <el-table-column label="代理端口">
+        <template #default>
+          <span>{{ proxyPort }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="更新时间" prop="timestamp" />
+      <el-table-column label="启动命令" width="340" prop="appCommand" />
+      <el-table-column label="状态" prop="status">
         <template #default="scope">
-          <el-button type="primary" :disabled="scope.row.status !== 'stopped'" @click="startApp(scope.row)">启动</el-button>
-          <el-button type="danger" :disabled="scope.row.status !== 'running'" @click="stopApp(scope.row)">停止</el-button>
+          <el-tag v-if="scope.row.status === 'running'" type="success">运行中</el-tag>
+          <el-tag v-else-if="scope.row.status === 'starting'" type="warning">启动中</el-tag>
+          <el-tag v-else-if="scope.row.status === 'stopped'" type="danger">已停止</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="PID" prop="pid" />
+      <el-table-column label="操作" width="220">
+        <template #default="scope">
+          <el-button type="primary" :disabled="scope.row.status !== 'stopped'" size="small" @click="startApp(scope.row)">启动</el-button>
+          <el-button type="danger" :disabled="scope.row.status !== 'running'" size="small" @click="stopApp(scope.row)">停止</el-button>
+          <el-button type="success" :disabled="scope.row.status !== 'running'" size="small" @click="openAppInBrowser(scope.row)">打开</el-button>
         </template>
       </el-table-column>
     </el-table>

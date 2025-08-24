@@ -3,6 +3,6 @@ interface App {
   appName: string
   appPort: number
   pid?: null | number
-  status?: 'error' | 'running' | 'starting' | 'stopped'
-  timestamp?: Date
+  status?: 'running' | 'starting' | 'stopped'
+  timestamp?: Date | string
 }

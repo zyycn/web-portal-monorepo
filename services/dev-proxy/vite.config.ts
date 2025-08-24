@@ -1,4 +1,5 @@
 import { defineConfig } from '@internal/vite-config'
+import { loadEnv } from 'vite'
 
 import { vitePluginAppMonitor } from './plugins/vite-plugin-app-monitor'
 
@@ -39,16 +40,18 @@ const proxy = apps.reduce(
   {} as Record<string, Proxy>
 )
 
-export default defineConfig(() => {
+export default defineConfig(({ mode }) => {
+  const { VITE_APP_PORT, VITE_APP_PREFIX } = loadEnv(mode, process.cwd())
+
   return {
+    base: `/${VITE_APP_PREFIX}`,
     plugins: [
       vitePluginAppMonitor({
-        apps,
-        verbose: true
+        apps
       })
     ],
     server: {
-      port: 3000,
+      port: Number(VITE_APP_PORT),
       proxy
     }
   }

@@ -2,6 +2,7 @@ import type { Plugin, ViteDevServer } from 'vite'
 
 import { ChildProcess, spawn } from 'child_process'
 import { consola } from 'consola'
+import dayjs from 'dayjs'
 import { find } from 'es-toolkit/compat'
 import { Server } from 'http'
 import { Socket, Server as WebSocketServer } from 'socket.io'
@@ -12,8 +13,12 @@ interface PluginConfig {
   verbose?: boolean
 }
 
+type UpdateApp = Omit<App, 'appCommand' | 'appPort'> & {
+  appCommand?: App['appCommand']
+  appPort?: App['appPort']
+}
+
 export function vitePluginAppMonitor(options: PluginConfig): Plugin {
-  // 使用 ref 对象来存储状态，确保引用不变但内容可变
   const state = {
     apps: [] as App[],
     checkInterval: null as NodeJS.Timeout | null,
@@ -28,13 +33,13 @@ export function vitePluginAppMonitor(options: PluginConfig): Plugin {
       ...app,
       pid: null,
       status: 'stopped',
-      timestamp: new Date()
+      timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss')
     })
   })
 
-  const log = (message: string, ...args: any[]) => {
+  const log = (message: string) => {
     if (!verbose) return
-    consola.log(`🚀 [Vite Plugin App Monitor] ${message}`, ...args)
+    consola.log(`🚀 [Vite Plugin App Monitor] ${message}`)
   }
 
   const startPortChecking = () => {
@@ -54,9 +59,12 @@ export function vitePluginAppMonitor(options: PluginConfig): Plugin {
 
           if (response && response.status < 500) {
             if (app.status !== 'running') {
-              app.status = 'running'
-              app.timestamp = new Date()
               log(`应用 ${app.appName} 已启动`)
+
+              updateApp({
+                appName: app.appName,
+                status: 'running'
+              })
 
               // 广播状态更新
               if (state.wsServer) {
@@ -67,9 +75,13 @@ export function vitePluginAppMonitor(options: PluginConfig): Plugin {
         } catch {
           // 连接失败，应用可能未运行
           if (app.status !== 'stopped' && app.status !== 'starting') {
-            app.status = 'stopped'
-            app.timestamp = new Date()
             log(`应用 ${app.appName} 已停止`)
+
+            updateApp({
+              appName: app.appName,
+              status: 'stopped'
+            })
+
             // 广播状态更新
             if (state.wsServer) {
               state.wsServer.emit('status-update', app)
@@ -86,9 +98,11 @@ export function vitePluginAppMonitor(options: PluginConfig): Plugin {
     state.processes.delete(child.pid || 0)
 
     // 更新状态
-    app.pid = null
-    app.status = 'stopped'
-    app.timestamp = new Date()
+    updateApp({
+      appName: app.appName,
+      pid: null,
+      status: 'stopped'
+    })
 
     // 更新缓存
     const findApp = find(state.apps, { appName: app.appName })
@@ -96,6 +110,13 @@ export function vitePluginAppMonitor(options: PluginConfig): Plugin {
 
     // 广播状态更新
     state.wsServer?.emit('status-update', app)
+  }
+
+  const updateApp = (app: UpdateApp) => {
+    const findApp = find(state.apps, { appName: app.appName })
+
+    const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')
+    if (findApp) Object.assign(findApp, { ...app, timestamp })
   }
 
   return {
@@ -111,8 +132,8 @@ export function vitePluginAppMonitor(options: PluginConfig): Plugin {
         try {
           if (pid) await kill(pid)
           log(`已终止应用 ${appName} (PID: ${pid})`)
-        } catch (error) {
-          log(`终止应用 ${appName} 失败：`, error)
+        } catch {
+          log(`终止应用 ${appName} 失败：`)
         }
       }
       state.processes.clear()
@@ -150,8 +171,10 @@ export function vitePluginAppMonitor(options: PluginConfig): Plugin {
           }
 
           // 更新状态为 starting
-          app.status = 'starting'
-          app.timestamp = new Date()
+          updateApp({
+            appName: app.appName,
+            status: 'starting'
+          })
 
           log(`正在启动应用 ${app.appName}...`)
 
@@ -175,12 +198,12 @@ export function vitePluginAppMonitor(options: PluginConfig): Plugin {
               handleError(app, child)
             })
 
-            child.on('error', err => {
-              log(`启动应用 ${app.appName} 失败:`, err)
+            child.on('error', () => {
+              log(`启动应用 ${app.appName} 失败:`)
               handleError(app, child)
             })
-          } catch (error) {
-            log(`启动应用 ${app.appName} 异常:`, error)
+          } catch {
+            log(`启动应用 ${app.appName} 异常:`)
 
             const child = state.processes.get(app.pid || 0)
             if (child) handleError(app, child)
@@ -197,25 +220,21 @@ export function vitePluginAppMonitor(options: PluginConfig): Plugin {
             log(`正在停止应用 ${appName} (PID: ${app.pid})...`)
 
             await kill(app.pid)
-            // 更新状态
-            app.pid = undefined
-            app.status = 'stopped'
-            app.timestamp = new Date()
+
+            updateApp({
+              appName: app.appName,
+              pid: null,
+              status: 'stopped'
+            })
 
             log(`已停止应用 ${appName} (PID: ${app.pid})`)
-          } catch (error) {
-            log(`停止应用 ${appName} 失败：`, error)
+          } catch {
+            log(`停止应用 ${appName} 失败：`)
           }
         })
       })
 
       startPortChecking()
-    },
-
-    // 添加热重载处理
-    handleHotUpdate() {
-      // 保持现有状态
-      return []
     },
 
     name: 'vite-plugin-app-monitor'
