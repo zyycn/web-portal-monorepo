@@ -1,183 +1,223 @@
 import type { Plugin, ViteDevServer } from 'vite'
 
-import { spawn } from 'child_process'
+import { ChildProcess, spawn } from 'child_process'
+import { consola } from 'consola'
+import { find } from 'es-toolkit/compat'
 import { Server } from 'http'
 import { Socket, Server as WebSocketServer } from 'socket.io'
+import kill from 'tree-kill-promise'
 
-export interface AppStatus {
-  appName: string
-  appPort: number
-  command: string
-  status: 'error' | 'running' | 'starting' | 'stopped'
-  timestamp: Date
+interface PluginConfig {
+  apps: App[]
+  verbose?: boolean
 }
 
-const appRuningCache: AppStatus[] = []
+export function vitePluginAppMonitor(options: PluginConfig): Plugin {
+  // 使用 ref 对象来存储状态，确保引用不变但内容可变
+  const state = {
+    apps: [] as App[],
+    checkInterval: null as NodeJS.Timeout | null,
+    httpServer: null as null | Server,
+    processes: new Map<number, ChildProcess>(), // 跟踪进程ID和应用状态的映射
+    wsServer: null as null | WebSocketServer
+  }
 
-let checkInterval: NodeJS.Timeout
+  const { apps = [], verbose = false } = options
+  apps.forEach(app => {
+    state.apps.push({
+      ...app,
+      pid: null,
+      status: 'stopped',
+      timestamp: new Date()
+    })
+  })
 
-const startPortChecking = () => {
-  if (checkInterval) clearInterval(checkInterval)
+  const log = (message: string, ...args: any[]) => {
+    if (!verbose) return
+    consola.log(`🚀 [Vite Plugin App Monitor] ${message}`, ...args)
+  }
 
-  // 定期检查应用端口
-  checkInterval = setInterval(async () => {
-    for (const appStatus of appRuningCache) {
-      // 检查应用是否已启动
-      try {
-        await fetch(`http://localhost:${appStatus.appPort}`)
-        appStatus.status = 'running'
-        console.log(`应用 ${appStatus.appName} 已启动`)
-      } catch (error) {
-        console.log(error)
-        appStatus.status = 'stopped'
-      }
+  const startPortChecking = () => {
+    if (state.checkInterval) {
+      clearInterval(state.checkInterval)
     }
-  }, 2000)
-}
 
-export function vitePluginAppMonitor(): Plugin {
-  let httpServer: Server
-  let wsServer: WebSocketServer
+    state.checkInterval = setTimeout(async () => {
+      for (const app of state.apps) {
+        try {
+          const controller = new AbortController()
+          const timeoutId = setTimeout(() => controller.abort(), 500)
+          const response = await fetch(`http://localhost:${app.appPort}`, {
+            signal: controller.signal
+          })
+          clearTimeout(timeoutId)
 
-  console.log('appRuningCache', appRuningCache)
+          if (response && response.status < 500) {
+            if (app.status !== 'running') {
+              app.status = 'running'
+              app.timestamp = new Date()
+              log(`应用 ${app.appName} 已启动`)
+
+              // 广播状态更新
+              if (state.wsServer) {
+                state.wsServer.emit('status-update', app)
+              }
+            }
+          }
+        } catch {
+          // 连接失败，应用可能未运行
+          if (app.status !== 'stopped' && app.status !== 'starting') {
+            app.status = 'stopped'
+            app.timestamp = new Date()
+            log(`应用 ${app.appName} 已停止`)
+            // 广播状态更新
+            if (state.wsServer) {
+              state.wsServer.emit('status-update', app)
+            }
+          }
+        }
+      }
+
+      startPortChecking()
+    }, 1000)
+  }
+
+  const handleError = (app: App, child: ChildProcess) => {
+    state.processes.delete(child.pid || 0)
+
+    // 更新状态
+    app.pid = null
+    app.status = 'stopped'
+    app.timestamp = new Date()
+
+    // 更新缓存
+    const findApp = find(state.apps, { appName: app.appName })
+    if (findApp) Object.assign(findApp, app)
+
+    // 广播状态更新
+    state.wsServer?.emit('status-update', app)
+  }
 
   return {
+    // 插件关闭时清理资源
+    async closeBundle() {
+      if (state.checkInterval) {
+        clearInterval(state.checkInterval)
+        state.checkInterval = null
+      }
+
+      // 关闭所有运行中的应用
+      for (const { appName, pid } of state.apps) {
+        try {
+          if (pid) await kill(pid)
+          log(`已终止应用 ${appName} (PID: ${pid})`)
+        } catch (error) {
+          log(`终止应用 ${appName} 失败：`, error)
+        }
+      }
+      state.processes.clear()
+
+      if (state.wsServer) {
+        state.wsServer.close()
+        state.wsServer = null
+      }
+    },
+
     configureServer(server: ViteDevServer) {
-      httpServer = server.httpServer as Server
+      state.httpServer = server.httpServer as Server
 
       // 创建WebSocket服务器
-      wsServer = new WebSocketServer(httpServer, {
+      state.wsServer = new WebSocketServer(state.httpServer, {
         path: '/_app-monitor-ws',
         serveClient: false
       })
 
       // 处理WebSocket连接
-      wsServer.on('connection', (socket: Socket) => {
-        // 监听客户端消息
-        socket.on('command', (appStatus: AppStatus) => {
-          spawn(appStatus.command, { shell: true, stdio: 'inherit' })
-          socket.emit('status-update', appStatus)
+      state.wsServer.on('connection', (socket: Socket) => {
+        // 发送当前所有应用状态
+        socket.emit('app-list', state.apps)
+
+        // 监听启动应用命令
+        socket.on('start-app', (appName: App['appName']) => {
+          // 添加到缓存
+          const app = find(state.apps, { appName })
+          if (!app) return
+
+          if (app.status === 'running' || app.status === 'starting') {
+            // 如果应用已经在运行，忽略启动请求
+            log(`应用 ${app.appName} 已在运行，忽略启动请求`)
+            return
+          }
+
+          // 更新状态为 starting
+          app.status = 'starting'
+          app.timestamp = new Date()
+
+          log(`正在启动应用 ${app.appName}...`)
+
+          // 广播状态更新
+          socket.emit('status-update', app)
+
+          try {
+            // 执行命令，使用 inherit 将输出直接传递到父进程
+            const child = spawn(app.appCommand, {
+              detached: process.platform !== 'win32', // 在非Windows平台使子进程独立
+              shell: true,
+              stdio: 'inherit'
+            })
+
+            // 保存进程ID
+            app.pid = child.pid
+            if (child.pid) state.processes.set(child.pid, child)
+
+            // 监听进程退出
+            child.on('close', () => {
+              handleError(app, child)
+            })
+
+            child.on('error', err => {
+              log(`启动应用 ${app.appName} 失败:`, err)
+              handleError(app, child)
+            })
+          } catch (error) {
+            log(`启动应用 ${app.appName} 异常:`, error)
+
+            const child = state.processes.get(app.pid || 0)
+            if (child) handleError(app, child)
+          }
+        })
+
+        // 监听停止应用命令
+        socket.on('stop-app', async (appName: string) => {
+          const app = find(state.apps, { appName })
+          if (!app || !app.pid) return
+
+          try {
+            // 终止进程
+            log(`正在停止应用 ${appName} (PID: ${app.pid})...`)
+
+            await kill(app.pid)
+            // 更新状态
+            app.pid = undefined
+            app.status = 'stopped'
+            app.timestamp = new Date()
+
+            log(`已停止应用 ${appName} (PID: ${app.pid})`)
+          } catch (error) {
+            log(`停止应用 ${appName} 失败：`, error)
+          }
         })
       })
 
       startPortChecking()
     },
 
-    // launchApplication() {
-    //   try {
-    //     this.setStatus('starting', `执行启动命令: ${options.launchCommand} ${options.launchArgs?.join(' ') || ''}`)
-
-    //     // 启动子进程
-    //     appProcess = spawn(options.launchCommand, options.launchArgs || [], {
-    //       shell: true,
-    //       stdio: 'pipe'
-    //     })
-
-    //     // 处理标准输出
-    //     appProcess.stdout?.on('data', data => {
-    //       const output = data.toString()
-    //       console.log(`[App] ${output}`)
-
-    //       // 广播日志输出
-    //       if (wsServer) {
-    //         wsServer.emit('log-output', {
-    //           message: output,
-    //           timestamp: new Date(),
-    //           type: 'stdout'
-    //         })
-    //       }
-
-    //       // 检查应用启动成功的标志
-    //       if (output.includes('Local:') || output.includes('http://')) {
-    //         this.setStatus('running', '应用启动成功')
-    //       }
-    //     })
-
-    //     // 处理错误输出
-    //     appProcess.stderr?.on('data', data => {
-    //       const output = data.toString()
-    //       console.error(`[App] ${output}`)
-
-    //       // 广播错误输出
-    //       if (wsServer) {
-    //         wsServer.emit('log-output', {
-    //           message: output,
-    //           timestamp: new Date(),
-    //           type: 'stderr'
-    //         })
-    //       }
-    //     })
-
-    //     // 处理进程退出
-    //     appProcess.on('close', code => {
-    //       this.setStatus('stopped', `应用进程已退出，代码: ${code}`)
-    //       appProcess = null
-    //     })
-
-    //     appProcess.on('error', err => {
-    //       this.setStatus('error', `启动应用时出错: ${err.message}`)
-    //       console.error('启动应用失败:', err)
-    //     })
-    //   } catch (error) {
-    //     this.setStatus('error', `启动应用时异常: ${(error as Error)?.message}`)
-    //     console.error('启动应用异常:', error)
-    //   }
-    // },
+    // 添加热重载处理
+    handleHotUpdate() {
+      // 保持现有状态
+      return []
+    },
 
     name: 'vite-plugin-app-monitor'
-
-    // setStatus(status: AppStatus['status'], message?: string) {
-    //   currentStatus = {
-    //     message,
-    //     port: options.appPort,
-    //     status,
-    //     timestamp: new Date()
-    //   }
-
-    //   // 广播状态更新
-    //   if (wsServer) {
-    //     wsServer.emit('status-update', currentStatus)
-    //   }
-
-    //   console.log(`[AppMonitor] ${status}: ${message || ''}`)
-    // },
-
-    // // 自定义方法
-    // startAppMonitoring() {
-    //   this.setStatus('starting', '启动应用监控...')
-
-    //   // 启动应用
-    //   this.launchApplication()
-
-    //   // 开始端口检测
-    //   this.startPortChecking()
-    // },
-
-    // startPortChecking() {
-    //   // 定期检查应用端口
-    //   const checkInterval = setInterval(async () => {
-    //     if (currentStatus.status === 'stopped' || currentStatus.status === 'error') {
-    //       clearInterval(checkInterval)
-    //       return
-    //     }
-
-    //     const isPortOpen = await this.checkPort(options.appPort)
-
-    //     if (isPortOpen && currentStatus.status !== 'running') {
-    //       this.setStatus('running', '应用端口已就绪')
-    //     } else if (!isPortOpen && currentStatus.status === 'running') {
-    //       this.setStatus('error', '应用端口无法访问')
-    //     }
-    //   }, 2000)
-    // },
-
-    // // 提供API路由给前端
-    // transformIndexHtml(html: string) {
-    //   // 注入监控客户端脚本
-    //   if (viteServer?.config.command === 'serve') {
-    //     return html.replace('</head>', `<script type="module" src="/@app-monitor-client"></script></head>`)
-    //   }
-    //   return html
-    // }
   }
 }

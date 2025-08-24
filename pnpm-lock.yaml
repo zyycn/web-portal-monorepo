@@ -54,6 +54,9 @@ importers:
       '@scripts/turbo-run':
         specifier: workspace:^
         version: link:scripts/turbo-run
+      '@services/dev-proxy':
+        specifier: workspace:^
+        version: link:services/dev-proxy
       '@types/node':
         specifier: ^24.3.0
         version: 24.3.0
@@ -118,24 +121,6 @@ importers:
       vue-tsc:
         specifier: ^3.0.6
         version: 3.0.6(typescript@5.9.2)
-
-  apps/dev-proxy:
-    dependencies:
-      axios:
-        specifier: ^1.11.0
-        version: 1.11.0
-      element-plus:
-        specifier: ^2.10.7
-        version: 2.10.7(vue@3.5.18(typescript@5.9.2))
-      socket.io:
-        specifier: ^4.8.1
-        version: 4.8.1
-      socket.io-client:
-        specifier: ^4.8.1
-        version: 4.8.1
-      vue:
-        specifier: ^3.5.18
-        version: 3.5.18(typescript@5.9.2)
 
   apps/login:
     dependencies:
@@ -329,6 +314,9 @@ importers:
       axios:
         specifier: ^1.11.0
         version: 1.11.0
+      consola:
+        specifier: ^3.4.2
+        version: 3.4.2
       element-plus:
         specifier: ^2.10.7
         version: 2.10.7(vue@3.5.18(typescript@5.9.2))
@@ -338,6 +326,9 @@ importers:
       socket.io-client:
         specifier: ^4.8.1
         version: 4.8.1
+      tree-kill-promise:
+        specifier: ^4.0.0
+        version: 4.0.0
       vue:
         specifier: ^3.5.18
         version: 3.5.18(typescript@5.9.2)
@@ -4350,6 +4341,14 @@ packages:
   totalist@3.0.1:
     resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
     engines: {node: '>=6'}
+
+  tree-kill-promise@4.0.0:
+    resolution: {integrity: sha512-k6PxcH/5e+dJiTyw3KUO0Pfxav4H10M+JMFgssaWqnTweAP5oVRNuWbWoYJgowbRdi46yXV9YvyVnDwGGvSCvw==}
+    engines: {node: '>=20'}
+
+  tree-kill@1.2.2:
+    resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
+    hasBin: true
 
   ts-api-utils@2.1.0:
     resolution: {integrity: sha512-CUgTZL1irw8u29bzrOD/nH85jqyc74D6SshFgujOIA7osm2Rz7dYH77agkx7H4FBNxDq7Cjf+IjaX/8zwFW+ZQ==}
@@ -8938,6 +8937,12 @@ snapshots:
       is-number: 7.0.0
 
   totalist@3.0.1: {}
+
+  tree-kill-promise@4.0.0:
+    dependencies:
+      tree-kill: 1.2.2
+
+  tree-kill@1.2.2: {}
 
   ts-api-utils@2.1.0(typescript@5.9.2):
     dependencies:

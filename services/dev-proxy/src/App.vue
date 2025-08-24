@@ -1,26 +1,25 @@
 <script setup lang="ts">
 import type { Socket } from 'socket.io-client'
 
+import { find } from 'es-toolkit/compat'
 import { io } from 'socket.io-client'
 
-interface AppStatus {
-  appName: string
-  appPort: number
-  command: string
-  status: 'error' | 'running' | 'starting' | 'stopped'
-  timestamp: Date
-}
-
 class AppMonitorClient {
-  public status: any
-  private socket: Socket | undefined
+  public apps: { value: App[] }
+  public socket: Socket | undefined
 
   constructor() {
+    this.socket = undefined
+    this.apps = ref<App[]>([])
     this.connectWebSocket()
   }
 
-  public sendCommand(command: AppStatus) {
-    this.socket?.emit('command', command)
+  public startApp(appName: App['appName']) {
+    this.socket?.emit('start-app', appName)
+  }
+
+  public stopApp(appName: App['appName']) {
+    this.socket?.emit('stop-app', appName)
   }
 
   private connectWebSocket() {
@@ -28,66 +27,54 @@ class AppMonitorClient {
       path: '/_app-monitor-ws'
     })
 
-    this.socket.on('connect', () => {
-      // this.updateStatus('starting', '已连接到监控服务器')
+    this.socket.on('app-list', (apps: App[]) => {
+      this.apps.value = apps
     })
 
-    this.socket.on('disconnect', () => {
-      // this.updateStatus('error', '与监控服务器的连接已断开')
-    })
-
-    this.socket.on('status-update', (status: AppStatus) => {
-      this.updateStatus(status)
-      console.log(this.status)
+    this.socket.on('status-update', (app: App) => {
+      this.updateApp(app)
     })
   }
 
-  private updateStatus(status: AppStatus) {
-    this.status = status
+  private updateApp(app: App) {
+    if (!this.apps) return
+
+    console.log(app)
+
+    const findApp = find(this.apps.value, { appName: app.appName })
+    if (findApp) Object.assign(findApp, app)
   }
 }
 
 // 初始化监控客户端
 const appMonitorClient = new AppMonitorClient()
 
+const apps = computed(() => appMonitorClient.apps.value)
+
 // 发送事件
-const sendCommand = (command: AppStatus) => {
-  appMonitorClient.sendCommand(command)
+const startApp = (app: App) => {
+  appMonitorClient.startApp(app.appName)
 }
 
-const apps = [
-  {
-    appName: 'login',
-    appPort: 6001,
-    command: 'pnpm --filter=@apps/login dev'
-  },
-  {
-    appName: 'portal',
-    appPort: 6002,
-    command: 'pnpm --filter=@apps/portal dev'
-  },
-  {
-    appName: 'audit-system',
-    appPort: 6003,
-    command: 'pnpm --filter=@apps/audit-system dev'
-  }
-]
+const stopApp = (app: App) => {
+  appMonitorClient.stopApp(app.appName)
+}
 </script>
 
 <template>
-  <a href="">11111111111</a>
-  <div class="m-20">
-    <el-card class="m-20">
-      <el-table border :data="apps">
-        <el-table-column label="应用名称" prop="appName" />
-        <el-table-column label="应用端口" prop="appPort" />
-        <el-table-column label="启动命令" prop="command" />
-        <el-table-column label="操作">
-          <template #default="scope">
-            <el-button type="primary" @click="sendCommand(scope.row)">启动</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-card>
-  </div>
+  <el-card class="m-20">
+    <el-table border :data="apps">
+      <el-table-column label="应用名称" prop="appName" />
+      <el-table-column label="应用端口" prop="appPort" />
+      <el-table-column label="启动命令" prop="appCommand" />
+      <el-table-column label="状态" prop="status" />
+      <el-table-column label="PID" prop="pid" />
+      <el-table-column label="操作">
+        <template #default="scope">
+          <el-button type="primary" :disabled="scope.row.status !== 'stopped'" @click="startApp(scope.row)">启动</el-button>
+          <el-button type="danger" :disabled="scope.row.status !== 'running'" @click="stopApp(scope.row)">停止</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-card>
 </template>

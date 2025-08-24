@@ -1,5 +1,5 @@
 {
-  "name": "@services/dev-proxy1",
+  "name": "@services/dev-proxy",
   "description": "开发代理服务",
   "private": true,
   "version": "0.0.0",
@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "axios": "^1.11.0",
+    "consola": "^3.4.2",
     "element-plus": "^2.10.7",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
+    "tree-kill-promise": "^4.0.0",
     "vue": "^3.5.18"
   }
 }
