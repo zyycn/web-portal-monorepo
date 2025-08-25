@@ -24,6 +24,6 @@
     "unplugin-vue-components": "^29.0.0",
     "vite-plugin-checker": "^0.10.2",
     "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-vue-devtools": "^8.0.0"
+    "vite-plugin-vue-devtools": "^8.0.1"
   }
 }

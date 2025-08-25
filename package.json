@@ -37,7 +37,7 @@
     "@scripts/turbo-run": "workspace:^",
     "@services/dev-proxy": "workspace:^",
     "@types/node": "^24.3.0",
-    "eslint": "^9.33.0",
+    "eslint": "^9.34.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.5",
     "postcss": "^8.5.6",
