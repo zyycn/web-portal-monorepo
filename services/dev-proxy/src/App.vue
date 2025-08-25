@@ -60,10 +60,6 @@ const stopApp = (app: App) => {
 const openAppInBrowser = (app: App) => {
   window.open(`/${app.appName}`, '_blank')
 }
-
-const proxyPort = computed(() => {
-  return import.meta.env.VITE_APP_PORT
-})
 </script>
 
 <template>
@@ -71,11 +67,7 @@ const proxyPort = computed(() => {
     <el-table border :data="apps">
       <el-table-column label="应用名称" prop="appName" />
       <el-table-column label="真实端口" prop="appPort" />
-      <el-table-column label="代理端口">
-        <template #default>
-          <span>{{ proxyPort }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="代理端口" prop="appProxyPort" />
       <el-table-column label="更新时间" prop="timestamp" />
       <el-table-column label="启动命令" width="340" prop="appCommand" />
       <el-table-column label="状态" prop="status">

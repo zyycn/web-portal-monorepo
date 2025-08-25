@@ -19,6 +19,8 @@ type UpdateApp = Omit<App, 'appCommand' | 'appPort'> & {
 }
 
 export function vitePluginAppMonitor(options: PluginConfig): Plugin {
+  const { apps = [], verbose = false } = options
+
   const state = {
     apps: [] as App[],
     checkInterval: null as NodeJS.Timeout | null,
@@ -27,22 +29,24 @@ export function vitePluginAppMonitor(options: PluginConfig): Plugin {
     wsServer: null as null | WebSocketServer
   }
 
-  const { apps = [], verbose = false } = options
-  apps.forEach(app => {
-    state.apps.push({
-      ...app,
-      pid: null,
-      status: 'stopped',
-      timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss')
+  const initApps = (server: ViteDevServer) => {
+    apps.forEach(app => {
+      state.apps.push({
+        ...app,
+        appProxyPort: server.config.server.port,
+        pid: null,
+        status: 'stopped',
+        timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss')
+      })
     })
-  })
+  }
 
   const log = (message: string) => {
     if (!verbose) return
     consola.log(`🚀 [Vite Plugin App Monitor] ${message}`)
   }
 
-  const startPortChecking = () => {
+  const appPortChecking = () => {
     if (state.checkInterval) {
       clearInterval(state.checkInterval)
     }
@@ -51,7 +55,7 @@ export function vitePluginAppMonitor(options: PluginConfig): Plugin {
       for (const app of state.apps) {
         try {
           const controller = new AbortController()
-          const timeoutId = setTimeout(() => controller.abort(), 500)
+          const timeoutId = setTimeout(() => controller.abort(), 800)
           const response = await fetch(`http://localhost:${app.appPort}`, {
             signal: controller.signal
           })
@@ -90,7 +94,7 @@ export function vitePluginAppMonitor(options: PluginConfig): Plugin {
         }
       }
 
-      startPortChecking()
+      appPortChecking()
     }, 1000)
   }
 
@@ -234,7 +238,8 @@ export function vitePluginAppMonitor(options: PluginConfig): Plugin {
         })
       })
 
-      startPortChecking()
+      initApps(server)
+      appPortChecking()
     },
 
     name: 'vite-plugin-app-monitor'
